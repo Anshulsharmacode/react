@@ -1,203 +1,81 @@
-
-import { useCallback, useEffect, useState,useRef } from 'react'
-import './App.css'
+import React, { useCallback, useEffect, useState } from 'react'
 
 function App() {
 
-
+  const [password, setpassword] = useState("")
   const [length, setLength] = useState(8)
-  const [numberAllowed, setNumberAllowed] = useState(false);
-  const [charAllowed, setCharAllowed] = useState(false)
-  const [password, setPassword] = useState("")
+  const [charallow, setcharallow] = useState(false)
+  const [numberallow, setnumberallow] = useState(false)
 
-  //useRef hook
-  const passwordRef = useRef(null)
+  const passwordGen=useCallback(()=>{
+    let pass="";
+    let str="QWERTYUIOPASDFGHJKLZXCVBNM";
+    console.log(str)
 
-  const passwordGenerator = useCallback(() => {
-    let pass = ""
-    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-    if (numberAllowed) str += "0123456789"
-    if (charAllowed) str += "!@#$%^&*-_+=[]{}~`"
+    if (numberallow) str+="123456789";
+    if (charallow) str+="!@#$%^&*(){}[]";
 
-    for (let i = 1; i <= length; i++) {
-      let char = Math.floor(Math.random() * str.length + 1)
-      pass += str.charAt(char)
+    for (let i = 1; i <= length; i++) { 
+      let pin= Math.floor(Math.random()*str.length);
+      pass += str.charAt(pin);
+      
       
     }
 
-    setPassword(pass)
+    setpassword(pass)
 
-
-  }, [length, numberAllowed, charAllowed, setPassword])
+  },[numberallow,charallow,length])
 
   useEffect(()=>{
-    passwordGenerator()
-  },[numberAllowed,charAllowed,length,passwordGenerator])
+    passwordGen()
+  },[length,charallow,numberallow])
 
   return (
-    <>
-      <div className='w-full max-w-md mx-auto shadow-md rounded-lg px-4 py-3 my-8 bg-gray-800 text-orange-500'>
-        <div className='w-full flex shadow-sm rounded-lg px-4 py-3 my-8 bg-green-400 text-orange-100'>
-          <input 
-          type="text"
-          value={password}
-          className='outline-none w-full py-1 rounded-lg'
-
-          placeholder='password'
-          ref={passwordRef}
-
-           />
-           <button className='bg-blue'>Copy</button>
-
-        </div>
-        <div className='flex text-sm gap-x-2'>
-          <div className='flex items-center gap-x-1'>
-          <input
-             type="range"
-             value={length}
-             className="outline-none w-full py-1 px-3"
-             placeholder="Password"
-             readOnly
-             
-             onChange={(e) => {setLength(e.target.value)}}
-         />
-              <label >Length:{length}</label>
-
-          </div>
-
-        <div>
-          <input
-           type="checkbox"
-           value={charAllowed}
-           defaultChecked={charAllowed}
-           className='cursor-pointer'
-           onChange={()=>{
-            setCharAllowed((prev) => !prev);
-           }}
-           />
-             <label className=''>character</label>
-        </div>
-        <div>
-        <input
-           type="checkbox"
-           value={numberAllowed}
-           className='cursor-pointer'
-           onChange={()=>{
-            setNumberAllowed((prev) => !prev);
-           }}
-           />
-             <label className=''>numberAllow</label>
-        </div>
-        </div>
-        
-        
-        
-        </div>  
-
-
-
-    </>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Password Generator</h1>
+      <input 
+        type="text" 
+        value={password} 
+        onChange={(e) => setLength(Number(e.target.value))}
+        className="mb-4"
+      />
+      
+      <input 
+        type="range" 
+        value={length} 
+        onChange={(e) => setLength(Number(e.target.value))} 
+        min="1" 
+        max="20" 
+        className="mb-4"
+      />
+      <span>Password Length: {length}</span>
+      <label className="block mb-2">
+        <input 
+          type="checkbox" 
+          checked={charallow} 
+          onChange={(e) => setcharallow(e.target.checked)} 
+          className="mr-2"
+        />
+        Allow Special Characters
+      </label>
+      <label className="block mb-2">
+        <input 
+          type="checkbox" 
+          checked={numberallow} 
+          onChange={(e) => setnumberallow(e.target.checked)} 
+          className="mr-2"
+        />
+        Allow Numbers
+      </label>
+      {/* <button 
+        onClick={passwordGen} 
+        className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+      >
+        Generate Password
+      </button> */}
+      <p className="mt-4">{password}</p>
+    </div>
   )
 }
 
 export default App
-
-// import { useState, useCallback, useEffect, useRef } from 'react'
-
-
-
-// function App() {
-//   const [length, setLength] = useState(8)
-//   const [numberAllowed, setNumberAllowed] = useState(false);
-//   const [charAllowed, setCharAllowed] = useState(false)
-//   const [password, setPassword] = useState("")
-
-//   //useRef hook
-//   const passwordRef = useRef(null)
-
-//   const passwordGenerator = useCallback(() => {
-//     let pass = ""
-//     let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-//     if (numberAllowed) str += "0123456789"
-//     if (charAllowed) str += "!@#$%^&*-_+=[]{}~`"
-
-//     for (let i = 1; i <= length; i++) {
-//       let char = Math.floor(Math.random() * str.length + 1)
-//       pass += str.charAt(char)
-      
-//     }
-
-//     setPassword(pass)
-
-
-//   }, [length, numberAllowed, charAllowed, setPassword])
-
-//   const copyPasswordToClipboard = useCallback(() => {
-//     passwordRef.current?.select();
-//     passwordRef.current?.setSelectionRange(0, 999);
-//     window.navigator.clipboard.writeText(password)
-//   }, [password])
-
-//   useEffect(() => {
-//     passwordGenerator()
-//   }, [length, numberAllowed, charAllowed, passwordGenerator])
-//   return (
-    
-//     <div className="w-full max-w-md mx-auto shadow-md rounded-lg px-4 py-3 my-8 bg-gray-800 text-orange-500">
-//       <h1 className='text-white text-center my-3'>Password generator</h1>
-//     <div className="flex shadow rounded-lg overflow-hidden mb-4">
-//         <input
-//             type="text"
-//             value={password}
-//             className="outline-none w-full py-1 px-3"
-//             placeholder="Password"
-//             readOnly
-//             ref={passwordRef}
-//         />
-//         <button
-//         onClick={copyPasswordToClipboard}
-//         className='outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0'
-//         >copy</button>
-        
-//     </div>
-//     <div className='flex text-sm gap-x-2'>
-//       <div className='flex items-center gap-x-1'>
-//         <input 
-//         type="range"
-//         min={6}
-//         max={100}
-//         value={length}
-//          className='cursor-pointer'
-//          onChange={(e) => {setLength(e.target.value)}}
-//           />
-//           <label>Length: {length}</label>
-//       </div>
-//       <div className="flex items-center gap-x-1">
-//       <input
-//           type="checkbox"
-//           defaultChecked={numberAllowed}
-//           id="numberInput"
-//           onChange={() => {
-//               setNumberAllowed((prev) => !prev);
-//           }}
-//       />
-//       <label htmlFor="numberInput">Numbers</label>
-//       </div>
-//       <div className="flex items-center gap-x-1">
-//           <input
-//               type="checkbox"
-//               defaultChecked={charAllowed}
-//               id="characterInput"
-//               onChange={() => {
-//                   setCharAllowed((prev) => !prev )
-//               }}
-//           />
-//           <label htmlFor="characterInput">Characters</label>
-//       </div>
-//     </div>
-// </div>
-    
-//   )
-// }
-
-// export default App
