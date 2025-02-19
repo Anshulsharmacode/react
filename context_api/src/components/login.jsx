@@ -2,13 +2,13 @@ import React, { useState, useContext } from 'react';
 import Usecontext from "../context/Usecontext";
 
 function Login() {
-    const { setuser } = useContext(Usecontext);
+    const { setUser } = useContext(Usecontext);
     const [name, setname] = useState('');
     const [password, setpassword] = useState('');
 
     const submit = (e) => {
         e.preventDefault();
-        setuser({ name, password });
+        setUser({ name, password });
     }
 
     return (
